@@ -1,8 +1,9 @@
 """
-GUI Calculator Application
+GUI Calculator Application with Square Root
 """
 
 import tkinter as tk
+import math
 
 
 class CalculatorGUI:
@@ -29,6 +30,7 @@ class CalculatorGUI:
             "4", "5", "6", "*",
             "1", "2", "3", "-",
             "0", ".", "=", "+",
+            "√"
         ]
 
         row = 1
@@ -40,6 +42,7 @@ class CalculatorGUI:
                 text=button,
                 width=8,
                 height=3,
+                font=("Arial", 12),
                 command=lambda value=button: self.click(value)
             ).grid(row=row, column=col)
 
@@ -48,13 +51,16 @@ class CalculatorGUI:
                 col = 0
                 row += 1
 
+        # Clear Button
         tk.Button(
             root,
             text="C",
             width=34,
             height=2,
+            font=("Arial", 12),
+            bg="lightcoral",
             command=self.clear
-        ).grid(row=5, column=0, columnspan=4)
+        ).grid(row=6, column=0, columnspan=4)
 
     def click(self, value):
         """Handle button click"""
@@ -67,6 +73,23 @@ class CalculatorGUI:
             except (SyntaxError, ZeroDivisionError):
                 self.display_var.set("Error")
                 self.expression = ""
+
+        elif value == "√":
+            try:
+                number = float(self.expression)
+
+                if number < 0:
+                    self.display_var.set("Error")
+                    self.expression = ""
+                else:
+                    result = str(math.sqrt(number))
+                    self.display_var.set(result)
+                    self.expression = result
+
+            except ValueError:
+                self.display_var.set("Error")
+                self.expression = ""
+
         else:
             self.expression += str(value)
             self.display_var.set(self.expression)
